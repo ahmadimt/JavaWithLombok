@@ -1,4 +1,4 @@
-# Using Lombok in Your Project
+# Using Lombok in Java Projects
 ## Setting up with Eclipse
 1. Download Lombok from ``https://projectlombok.org/download.html``.
 2. Run it by double clicking on it or by firing ``java -jar lombok.jar``.
