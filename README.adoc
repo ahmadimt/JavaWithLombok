@@ -1,4 +1,4 @@
-= Faster development and concise code with Lombok in Java project
+= Make you Java code concise with Lombok
 Imteyaz Ahmad <imteyaz.ahmad@talentica.com>
 
 == About the Author
