@@ -1,4 +1,4 @@
-= Make you Java code concise with Lombok
+= Make your Java code concise with Lombok
 Imteyaz Ahmad <imteyaz.ahmad@talentica.com>
 
 == About the Author
