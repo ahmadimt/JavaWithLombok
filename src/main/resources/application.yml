@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    name: postgres
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://127.0.0.1:5432/testlombok
+    driver-class-name: org.postgresql.Driver
+  data:
+    jpa:
+      repositories:
+        enabled: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+
