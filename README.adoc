@@ -1,4 +1,5 @@
 = Make your Java code concise with Lombok
+:source-highlighter: pygments
 Imteyaz Ahmad <imteyaz.ahmad@talentica.com>
 
 == About the Author
@@ -34,7 +35,8 @@ dependencies {
 
 === @Getter and @Setter
 
-[source,java,indent=4]
+[source,java,linenums]
+----
 package com.imti.lombok;
 @Getter
 @Setter
@@ -42,14 +44,14 @@ public class GetterSetterLombok {
     private String name;
     private String message;
 }
-
+----
 This will generate `public` getter/setter for every non-static field. If you want to define access level, it can be done by specifying `AccessLevel`
 
 e.g.: `@Setter(AccessLevel.PROTECTED) private String name;`
 
 If you do NOT want to generate getter/setter for a particular field, then you can disable it by invoking `AccessLevel.NONE`.
 
-[source,java,indent=4]
+[source,java,linenums]
 package com.imti.lombok;
 @Getter
 @Setter
@@ -62,9 +64,12 @@ public class GetterSetterLombok {
 
 === @ToString
 By default, all non-static field will be included. If you want to exclude any, define them in `exclude` parameter.
-[source,java,indent=4]
+[source,java,linenums]
+----
 package com.imti.lombok;
 //This will print value of all fields except id (excluded) and STATIC_VAR(static field).
+/**
+* created by imteyaza on 6/8/2016
 @ToString(exclude="id")
 public class HelloLombok {
 	private static final int STATIC_VAR=10;
@@ -72,10 +77,11 @@ public class HelloLombok {
 	private String name;
 	private String message;
 }
-
+----
 Here is test class for the same.
 
-[source,java,indent=4]
+[source,java,linenums]
+----
 public class HelloLombokTest {
     @Test
     public void testToString(){
@@ -86,13 +92,14 @@ public class HelloLombokTest {
         System.out.println(helloLombok.toString());
     }
 }
-
+----
 Output of this test is: +
 `HelloLombok(name=Imteyaz, message=Hello Lombok!)`
 
 Note: If you, by mistake, typed name of non-existing field, it will generate a warning!
 
-[source,java,indent=4]
+[source,java,linenums]
+----
 package com.imti.lombok;
 import lombok.Getter;
 import lombok.Setter;
@@ -107,14 +114,15 @@ public class HelloLombok {
     private String name;
     private String message;
 }
-
+----
 
 This will generate a warning `The field 'hell' does not exist`
 
 === @Log
 For using any logging library, configure it as per the instructions by provider,then use it's annotation. for example for Log4j2, we will use `@Log4j2`
 
-[source,java,indent=4]
+[source,java,linenums]
+----
 @Log4j2
 public class HelloWorld {
 	private String name;
@@ -122,7 +130,7 @@ public class HelloWorld {
 		log.info("Inside the main method");
 	}
 }
-
+----
 It creates following line for you +
 `private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(HelloWorld.class);`
 
@@ -130,7 +138,8 @@ For other supported logging library, please refer to https://projectlombok.org/f
 
 === @Cleanup (My favourite)
 
-[source,java,indent=4]
+[source,java,linenums]
+----
 package com.imti.lombok;
 import lombok.Cleanup;
 import java.io.*;
@@ -149,13 +158,83 @@ public class ResourceCleanupLombok {
         }
     }
 }
-
+----
 [%hardbreaks]
 By default it looks for a method called `close()` in the type of Object you are cleaning up.If you have a custom method name, it can called as `@Cleanup("destroy")`.
 [red]#CAUTION#  `The destroy() method must be a non-argument method.`
 
+=== @EqualsAndHashCode
+
+If a class is annotated with @EqualsAndHashCode,it will use all non-static fields, by default. +
+If you want to exclude some parameter, it can be done by defining `exclude={"<field name>"}`. If the `<field name>` does not exist, it will generate a warning.
+
+[source,java,linenums]
+----
+package com.imti.lombok;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+//Created by imteyaza on 5/8/16.
+@EqualsAndHashCode(exclude = {"id","name","hell"})
+@Getter
+@Setter
+@ToString
+public class EqualAndHashcodeExample {
+    private static int COUNTER = 10;
+    private String id;
+    private String name;
+    private String message;
+}
+----
+This will generate a warning `The field 'hell' does not exist`
 
 
+=== @NoArgsConstructor, @RequiredArgsConstructor, @AllArgsConstructor
+
+* *@NoArgsConstructor:* generates default or no-arguments constructor for the class.
+* *@RequiredArgsConstructor:* creates a constructor with 1 parameter for each non-initialized final field.
+
+[source,java,linenums]
+----
+package com.imti.lombok;
+import lombok.*;
+//Created by imteyaza on 6/8/16.
+@Getter
+@Setter
+@ToString(exclude = {"id", "name"})
+@RequiredArgsConstructor
+public class HelloLombok {
+    private static final int VALUE = 10;
+    private String id;
+    private String name;
+    private final String message;
+}
+----
+will generate a class like below:
+
+[source,java,linenums]
+----
+package com.imti.lombok;
+import lombok.*;
+// Created by imteyaza on 6/8/16.
+public class HelloLombok {
+    private static final int VALUE = 10;
+    private String id;
+    private String name;
+    private final String message;
+    public HelloLombok(final String message) {
+        this.message = message;
+    }
+    //Other codes omitted for brevity
+}
+----
+
+* *@AllArgsConstructor:* will create a constructor with all fields.
+
+=== @Data
+
+It bundles @Getter/@Setter, @ToString, @EqualsAndHashCode and @RequiredArgsConstructor.
 
 === Conclusion
 These were some of the features provided by Lombok. Here is a link to list of all features- `https://projectlombok.org/features/index.html`
