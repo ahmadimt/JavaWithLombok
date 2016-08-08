@@ -24,7 +24,7 @@ Here is a plugin and installation instructions https://github.com/mplushnikov/lo
 == Using Lombok
 
 Add `lombok.jar` in your Java project, either using Maven, Gradle or any other build tools. Below is a sample `build.gradle` file.
-[source,gradle,indent=4]
+[source,gradle,linenums]
 dependencies {
     ........
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
@@ -161,7 +161,9 @@ public class ResourceCleanupLombok {
 ----
 [%hardbreaks]
 By default it looks for a method called `close()` in the type of Object you are cleaning up.If you have a custom method name, it can called as `@Cleanup("destroy")`.
-[red]#CAUTION#  `The destroy() method must be a non-argument method.`
+
+[NOTE]
+`The destroy() method must be a non-argument method.`
 
 === @EqualsAndHashCode
 
@@ -223,6 +225,7 @@ public class HelloLombok {
     private String id;
     private String name;
     private final String message;
+    //Other codes omitted for brevity
     public HelloLombok(final String message) {
         this.message = message;
     }
@@ -244,3 +247,11 @@ These were some of the features provided by Lombok. Here is a link to list of al
 * Download and installation instructions: https://projectlombok.org/download.html
 * IntelliJ plugin and installation instructions: https://github.com/mplushnikov/lombok-intellij-plugin
 * Sample application: https://github.com/ahmadimt/JavaWithLombok
+
+[NOTE]
+===============================
+[%hardbreaks]
+This document is generated with Asciidoctor.
+Official site: http://asciidoctor.org/
+Here is a great online book for reference to use Asciidoctor: https://leanpub.com/awesomeasciidoctornotebook/read 
+===============================
