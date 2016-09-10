@@ -1,6 +1,6 @@
 = Make your Java code concise with Lombok
 :source-highlighter: pygments
-Imteyaz Ahmad <imteyaz.ahmad@talentica.com>
+Imteyaz Ahmad <ahmad.imt07@gmail.com>
 
 == About the Author
 
