@@ -1,11 +1,6 @@
 = Make your Java code concise with Lombok
 :source-highlighter: pygments
-Imteyaz Ahmad <ahmad.imt07@gmail.com>
-
-== About the Author
-
-You can contact {author} at {email}.
-
+https://travis-ci.org/ahmadimt/JavaWithLombok.svg?branch=master
 == Installing Lombok
 
 === Eclipse
