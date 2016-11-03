@@ -1,7 +1,11 @@
-image::https://travis-ci.org/ahmadimt/JavaWithLombok.svg?branch=master[Build Status]
-= Make your Java code concise with Lombok 
+= Make your Java code concise with Lombok
+
+
 :source-highlighter: pygments
-https://travis-ci.org/ahmadimt/JavaWithLombok.svg?branch=master
+
+image::https://travis-ci.org/ahmadimt/JavaWithLombok.svg?branch=master[build status]
+
+
 == Installing Lombok
 
 === Eclipse
