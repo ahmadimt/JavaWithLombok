@@ -68,8 +68,7 @@ By default, all non-static field will be included. If you want to exclude any, d
 ----
 package com.imti.lombok;
 //This will print value of all fields except id (excluded) and STATIC_VAR(static field).
-/**
-* created by imteyaza on 6/8/2016
+/*** created by imteyaza on 6/8/2016
 @ToString(exclude="id")
 public class HelloLombok {
 	private static final int STATIC_VAR=10;
