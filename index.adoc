@@ -1,0 +1,256 @@
+= Make your Java code concise with Lombok
+Imteyaz Ahmad <ahmad.imt07@gmail.com>
+
+:source-highlighter: pygments
+
+image::https://travis-ci.org/ahmadimt/JavaWithLombok.svg?branch=master[build status]
+
+
+== Installing Lombok
+
+=== Eclipse
+  1. Download Lombok from https://projectlombok.org/download.html.
+  2. Run it by double clicking on it or by firing java -jar lombok.jar.
+  3. It will open an explorer window like shown as below:
+  image:lombok_screen1.png[Lombok,align="center"]
+  4. Point to folder containing Eclipse by clicking Specify Location..
+  5. After that, click on Install/Update
+  6. Once installation is done...add Lombok dependency in the project and restart Eclipse.
+    If it is not working then, you have to start Eclipse by firing `$ECLIPSE_HOME/eclipse --clean`.
+
+=== IntelliJ
+Here is a plugin and installation instructions https://github.com/mplushnikov/lombok-intellij-plugin
+
+== Using Lombok
+
+Add `lombok.jar` in your Java project, either using Maven, Gradle or any other build tools. Below is a sample `build.gradle` file.
+[source,gradle,linenums]
+dependencies {
+    ........
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
+    ........
+}
+
+== Annotations Provided by Lombok
+
+=== @Getter and @Setter
+
+[source,java,linenums]
+----
+package com.imti.lombok;
+@Getter
+@Setter
+public class GetterSetterLombok {
+    private String name;
+    private String message;
+}
+----
+This will generate `public` getter/setter for every non-static field. If you want to define access level, it can be done by specifying `AccessLevel`
+
+e.g.: `@Setter(AccessLevel.PROTECTED) private String name;`
+
+If you do NOT want to generate getter/setter for a particular field, then you can disable it by invoking `AccessLevel.NONE`.
+
+[source,java,linenums]
+package com.imti.lombok;
+@Getter
+@Setter
+public class GetterSetterLombok {
+    @Setter(AccessLevel.NONE)
+    private Long id;
+    private String name;
+    private String message;
+}
+
+=== @ToString
+By default, all non-static field will be included. If you want to exclude any, define them in `exclude` parameter.
+[source,java,linenums]
+----
+package com.imti.lombok;
+//This will print value of all fields except id (excluded) and STATIC_VAR(static field).
+/* created by imteyaza on 6/8/2016 */
+@ToString(exclude="id")
+public class HelloLombok {
+	private static final int STATIC_VAR=10;
+	private String id;
+	private String name;
+	private String message;
+}
+----
+Here is test class for the same.
+
+[source,java,linenums]
+----
+public class HelloLombokTest {
+    @Test
+    public void testToString(){
+        HelloLombok helloLombok = new HelloLombok();
+        helloLombok.setId("imti");
+        helloLombok.setMessage("Hello Lombok!");
+        helloLombok.setName("Imteyaz");
+        System.out.println(helloLombok.toString());
+    }
+}
+----
+Output of this test is: +
+`HelloLombok(name=Imteyaz, message=Hello Lombok!)`
+
+Note: If you, by mistake, typed name of non-existing field, it will generate a warning!
+
+[source,java,linenums]
+----
+package com.imti.lombok;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+//Created by imteyaza on 3/8/16.
+@Getter
+@Setter
+@ToString(exclude = {"id", "name","hell"})
+public class HelloLombok {
+    private static final int VALUE = 10;
+    private String id;
+    private String name;
+    private String message;
+}
+----
+
+This will generate a warning `The field 'hell' does not exist`
+
+=== @Log
+For using any logging library, configure it as per the instructions by provider,then use it's annotation. for example for Log4j2, we will use `@Log4j2`
+
+[source,java,linenums]
+----
+@Log4j2
+public class HelloWorld {
+	private String name;
+	public static void main(String args []){
+		log.info("Inside the main method");
+	}
+}
+----
+It creates following line for you +
+`private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger(HelloWorld.class);`
+
+For other supported logging library, please refer to https://projectlombok.org/features/Log.html
+
+=== @Cleanup (My favourite)
+
+[source,java,linenums]
+----
+package com.imti.lombok;
+import lombok.Cleanup;
+import java.io.*;
+//Created by imteyaza on 3/8/16.
+public class ResourceCleanupLombok {
+    public void readFile(String inputFileName, String outputFileName) throws IOException {
+        @Cleanup InputStream inputStream = new FileInputStream(inputFileName);
+        @Cleanup OutputStream outputStream = new FileOutputStream(outputFileName);
+        byte[] buffer = new byte[1024];
+        while (true) {
+            int line = inputStream.read(buffer);
+            if (line == -1) {
+                break;
+            }
+            outputStream.write(buffer, 0, line);
+        }
+    }
+}
+----
+[%hardbreaks]
+By default it looks for a method called `close()` in the type of Object you are cleaning up.If you have a custom method name, it can called as `@Cleanup("destroy")`.
+
+[NOTE]
+`The destroy() method must be a non-argument method.`
+
+=== @EqualsAndHashCode
+
+If a class is annotated with @EqualsAndHashCode,it will use all non-static fields, by default. +
+If you want to exclude some parameter, it can be done by defining `exclude={"<field name>"}`. If the `<field name>` does not exist, it will generate a warning.
+
+[source,java,linenums]
+----
+package com.imti.lombok;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+//Created by imteyaza on 5/8/16.
+@EqualsAndHashCode(exclude = {"id","name","hell"})
+@Getter
+@Setter
+@ToString
+public class EqualAndHashcodeExample {
+    private static int COUNTER = 10;
+    private String id;
+    private String name;
+    private String message;
+}
+----
+This will generate a warning `The field 'hell' does not exist`
+
+
+=== @NoArgsConstructor, @RequiredArgsConstructor, @AllArgsConstructor
+
+* *@NoArgsConstructor:* generates default or no-arguments constructor for the class.
+* *@RequiredArgsConstructor:* creates a constructor with 1 parameter for each non-initialized final field.
+
+[source,java,linenums]
+----
+package com.imti.lombok;
+import lombok.*;
+//Created by imteyaza on 6/8/16.
+@Getter
+@Setter
+@ToString(exclude = {"id", "name"})
+@RequiredArgsConstructor
+public class HelloLombok {
+    private static final int VALUE = 10;
+    private String id;
+    private String name;
+    private final String message;
+}
+----
+will generate a class like below:
+
+[source,java,linenums]
+----
+package com.imti.lombok;
+import lombok.*;
+// Created by imteyaza on 6/8/16.
+public class HelloLombok {
+    private static final int VALUE = 10;
+    private String id;
+    private String name;
+    private final String message;
+    //Other codes omitted for brevity
+    public HelloLombok(final String message) {
+        this.message = message;
+    }
+    //Other codes omitted for brevity
+}
+----
+
+* *@AllArgsConstructor:* will create a constructor with all fields.
+
+=== @Data
+
+It bundles @Getter/@Setter, @ToString, @EqualsAndHashCode and @RequiredArgsConstructor.
+
+=== Conclusion
+These were some of the features provided by Lombok. Here is a link to list of all features- `https://projectlombok.org/features/index.html`
+
+== References
+* Project Page:  https://projectlombok.org/index.html
+* Download and installation instructions: https://projectlombok.org/download.html
+* IntelliJ plugin and installation instructions: https://github.com/mplushnikov/lombok-intellij-plugin
+* Sample application: https://github.com/ahmadimt/JavaWithLombok
+
+[NOTE]
+===============================
+[%hardbreaks]
+This document is generated with Asciidoctor.
+Official site: http://asciidoctor.org/
+Here is a great online book for reference to use Asciidoctor: https://leanpub.com/awesomeasciidoctornotebook/read 
+===============================
